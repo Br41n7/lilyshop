@@ -1,0 +1,93 @@
+{% extends "shop/base.html" %}
+{% load i18n static %}
+
+{% block title %}{% translate "Pay your order" %}{% endblock %}
+
+{% block content %}
+<div class="container my-4"> {# Add padding/margin around the content #}
+    <div class="row justify-content-center"> {# Center the content column #}
+        <div class="col-md-8 col-lg-7"> {# Use columns for layout, responsive width #}
+
+            <h1 class="mb-4 text-center">{% translate "Order summary" %}</h1> {# Add margin below heading, center text #}
+
+            {# Use a Bootstrap Card to group the summary and button #}
+            <div class="card shadow-sm"> {# Add a subtle shadow #}
+                <div class="card-body">
+
+                    <div class="table-responsive"> {# Keep responsive wrapper for table #}
+                        {# Apply Bootstrap table classes #}
+                        <table class="table table-striped table-bordered align-middle">
+                            <thead>
+                                <tr>
+                                    <th scope="col" class="text-center">{% translate "Image" %}</th>
+                                    <th scope="col">{% translate "Product" %}</th>
+                                    <th scope="col" class="text-end">{% translate "Price" %}</th>
+                                    <th scope="col" class="text-center">{% translate "Quantity" %}</th>
+                                    <th scope="col" class="text-end">{% translate "Total" %}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in order.items.all %}
+                                    <tr> {# Remove cycle class, Bootstrap striping handles it #}
+                                        <td class="text-center">
+                                            {# Add styling to limit image size in table #}
+                                            <img src="{% if item.product.image %}{{ item.product.image.url }}
+                                            {% else %}{% static "img/no_image.png" %}{% endif %}"
+                                                 alt="{{ item.product.name }}" {# Add alt text for accessibility #}
+                                                 style="max-width: 50px; height: auto;" class="img-fluid"> {# Make image responsive within cell #}
+                                        </td>
+                                        <td>{{ item.product.name }}</td>
+                                        <td class="text-end">${{ item.price|floatformat:2 }}</td> {# Use text-end for numbers, ensure currency format #}
+                                        <td class="text-center">{{ item.quantity }}</td> {# Center quantity #}
+                                        <td class="text-end">${{ item.get_cost|floatformat:2 }}</td> {# Use text-end, ensure currency format #}
+                                    </tr>
+                                  {% endfor %}
+
+                                {# Subtotal, Discount, and Total Rows #}
+                                {% if order.coupon %}
+                                    <tr class="table-light"> {# Optional: highlight subtotal row #}
+                                        <td>{% translate "Subtotal" %}</td>
+                                        <td colspan="3"></td> {# Ensure colspan matches number of columns minus 1 #}
+                                                                                <td class="text-end fw-bold"> {# Use text-end, make bold #}
+                                            ${{ order.get_total_cost_before_discount|floatformat:2 }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            {% blocktranslate with code=order.coupon.code discount=order.discount %}
+                                              "{{ code }}" ({{ discount }}% off)
+                                            {% endblocktranslate %}
+                                        </td>
+                                        <td colspan="3"></td>
+                                        <td class="text-end text-danger fw-bold"> {# Use text-end, make bold, use text-danger for negative #}
+                                            - ${{ order.get_discount|floatformat:2 }}
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                                <tr class="table-primary"> {# Optional: highlight total row #}
+                                    <td class="fw-bold">{% translate "Total" %}</td> {# Make text bold #}
+                                    <td colspan="3"></td>
+                                    <td class="text-end fw-bold"> {# Use text-end, make bold #}
+                                        ${{ order.get_total_cost|floatformat:2 }}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    {# Payment Form #}
+                    <form action="{% url "payment:process" %}" method="post" class="mt-4"> {# Add margin-top #}
+                        {% csrf_token %}
+                        {# Use Bootstrap button classes #}
+                        <button type="submit" class="btn btn-primary btn-lg w-100"> {# Use btn, btn-primary, btn-lg for size, w-100 for full width #}
+                            {% translate "Pay now" %}
+                        </button>
+                    </form>
+
+                </div> {# End card-body #}
+            </div> {# End card #}
+
+        </div> {# End col #}
+    </div> {# End row #}
+</div> {# End container #}
+{% endblock %}

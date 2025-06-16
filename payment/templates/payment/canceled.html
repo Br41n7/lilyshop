@@ -1,0 +1,67 @@
+{% extends "shop/base.html" %}
+{% load i18n %}
+{% load static %} {# Load static files if you need custom icons or styles #}
+
+{% block title %}{% translate "Payment Failed" %}{% endblock %}
+
+{% block content %}
+  <div class="container mt-4"> {# Add some margin top #}
+    <div class="row justify-content-center"> {# Center the content horizontally #}
+      <div class="col-md-8 col-lg-6"> {# Limit width on medium/large screens #}
+
+        <div class="card border-danger"> {# Use a card with a danger border #}
+          <div class="card-header bg-danger text-white text-center"> {# Danger header #}
+            <h2 class="mb-0">{% translate "Payment Failed" %}</h2> {# Main heading #}
+          </div>
+          <div class="card-body text-center"> {# Body content, centered text #}
+
+            {# Optional: Add an icon #}
+            {# Requires Font Awesome or similar linked in base.html #}
+            <div class="text-danger mb-3">
+              <i class="fas fa-times-circle fa-4x"></i> {# Example Font Awesome icon #}
+              {# Or use an image: <img src="{% static 'img/cancel-icon.png' %}" alt="Payment Failed" width="80"> #}
+            </div>
+
+            <p class="lead">{% translate "Unfortunately, there was a problem processing your payment." %}</p> {# More prominent paragraph #}
+
+            <hr> {# Separator #}
+
+            <div class="text-start"> {# Align text left for lists #}
+                <h4>{% translate "Possible Reasons:" %}</h4>
+                <ul>
+                    <li>{% translate "Insufficient funds." %}</li>
+                    <li>{% translate "Incorrect payment details (card number, expiry date, CVV)." %}</li>
+                    <li>{% translate "Transaction declined by your bank or card issuer." %}</li>
+                    <li>{% translate "Technical error or network issue." %}</li>
+                    <li>{% translate "Security measures or fraud prevention." %}</li>
+                </ul>
+
+                <h4>{% translate "What you can do:" %}</h4>
+                <ul>
+                    <li>{% translate "Double-check the payment information you entered." %}</li>
+                    <li>{% translate "Try making the payment again." %}</li>
+                    <li>{% translate "Use a different payment method." %}</li>
+                                        <li>{% translate "Contact your bank or card issuer for more information." %}</li>
+                    <li>{% translate "Contact our customer support if the problem persists." %}</li>
+                </ul>
+            </div>
+
+            <hr> {# Separator #}
+
+            {# Call to action button #}
+            <a href="{% url 'shop:product_list' %}" class="btn btn-danger btn-lg mt-3">
+              {% translate "Return to Shop" %}
+            </a>
+             {# Optional: Link to cart if they need to modify items #}
+            {# <a href="{% url 'cart:cart_detail' %}" class="btn btn-secondary btn-lg mt-3 ms-2">
+              {% translate "Review Cart" %}
+            </a> #}
+
+          </div> {# End card-body #}
+        </div> {# End card #}
+
+      </div> {# End col #}
+    </div> {# End row #}
+  </div> {# End container #}
+{% endblock %}
+

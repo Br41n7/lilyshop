@@ -1,0 +1,64 @@
+{% extends "shop/base.html" %}
+{% load i18n %}
+{% load static %} {# Load static files if you need custom icons or styles #}
+
+{# REMOVED: The incorrect <head> block. It should only be in base.html. #}
+{# The <title> is handled by the block below, assuming base.html has {% block title %} #}
+
+{% block title %}{% translate "Payment Successful" %}{% endblock %}
+
+{% block content %}
+  <div class="container mt-4"> {# Add some margin top #}
+    <div class="row justify-content-center"> {# Center the content horizontally #}
+      <div class="col-md-8 col-lg-6"> {# Limit width on medium/large screens #}
+
+        <div class="card border-success"> {# Use a card with a success border #}
+          <div class="card-header bg-success text-white text-center"> {# Success header #}
+            <h2 class="mb-0">{% translate "Payment Successful!" %}</h2> {# Main heading #}
+          </div>
+          <div class="card-body text-center"> {# Body content, centered text #}
+
+            {# Optional: Add an icon #}
+            {# Requires Font Awesome or similar linked in base.html #}
+            <div class="text-success mb-3">
+              <i class="fas fa-check-circle fa-4x"></i> {# Example Font Awesome success icon #}
+              {# Or use an image: <img src="{% static 'img/success-icon.png' %}" alt="Payment Successful" width="80"> #}
+            </div>
+
+            <p class="lead">{% translate "Your payment was processed successfully." %}</p> {# More prominent paragraph #}
+                        <p>{% translate "Thank you for your purchase!" %}</p>
+
+            <hr> {# Separator #}
+
+            {# Display Order Information #}
+            {% if order %} {# Check if the order object is available in the context #}
+              <p>
+                <strong>{% translate "Your Order Number:" %}</strong> {{ order.id }} {# Assuming order object has an 'id' attribute #}
+                {# If your order model has a specific order number field, use that instead, e.g., {{ order.order_number }} #}
+              </p>
+            {% endif %}
+
+            <hr> {# Separator #}
+
+            {# Call to action buttons #}
+            {% if order %}
+              {# Link to view the specific order details #}
+              {# Replace 'orders:order_detail' with your actual URL name for order details #}
+              <a href="{% url 'orders:order_detail' order.id %}" class="btn btn-primary btn-lg mt-3">
+                {% translate "View Your Order" %}
+              </a>
+            {% endif %}
+
+            {# Link to continue shopping #}
+            {# Replace 'shop:product_list' with your actual URL name for the shop home/product list #}
+            <a href="{% url 'shop:product_list' %}" class="btn btn-secondary btn-lg mt-3 {% if order %}ms-2{% endif %}"> {# Add margin-start if View Order button is present #}
+              {% translate "Continue Shopping" %}
+            </a>
+
+          </div> {# End card-body #}
+        </div> {# End card #}
+
+      </div> {# End col #}
+    </div> {# End row #}
+  </div> {# End container #}
+{% endblock %}

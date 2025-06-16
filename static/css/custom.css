@@ -1,0 +1,74 @@
+.carousel-caption .btn-outline-light {
+    transition: background-color 0.3s ease-in-out, border-color 00.3s ease-in-out;
+}
+
+.carousel-caption .btn-outline-light:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-color: #fff;
+}
+.carousel-caption h2 {
+    font-size: 3rem;
+    font-weight: bold;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.carousel-caption p {
+    font-size: 1.5rem;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+}
+.product-list-img {
+        height: 200px; /* Set a fixed height for list product images */
+        object-fit: cover; /* Cover the area */
+        object-position: center; /* Center the image */
+    }
+
+    /* Optional: Hover effect for cards */
+.card:hover {
+        transform: translateY(-3px);
+        transition: transform 0.2s ease-in-out;
+        box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important; /* Stronger shadow on hover */
+    }
+
+     /* Optional: Hover effect for images */
+.product-list-img {
+         transition: transform 0.3s ease-in-out;
+     }
+.card a.position-relative:hover .product-list-img {
+         transform: scale(1.03); /* Slightly zoom on hover */
+     }
+
+
+.product-image-container img {
+        /* You could add max-height here if images are wildly different */
+        object-fit: cover; /* Ensure image covers area without distortion */
+        /* object-position: center; */
+    }
+
+    /* Style for recommended product images for consistent size */
+.recommended-product-img {
+        height: 150px; /* Set a fixed height for recommended product images */
+        object-fit: cover; /* Cover the area */
+        object-position: center; /* Center the image */
+    }
+
+    /* Style for the quantity input width */
+#id_quantity { /* Assuming the input ID is id_quantity based on the form field name */
+        width: 60px; /* Adjust width as needed */
+        text-align: center;
+        margin-left: 10px; /* Space from label */
+    }
+
+    /* Optional: Hover effect for recommended product cards */
+.card:hover {
+        transform: translateY(-3px);
+        transition: transform 0.2s ease-in-out;
+                  box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important; /* Stronger shadow on hover */
+    }
+
+     /* Optional: Hover effect for recommended product images */
+.recommended-product-img {
+         transition: transform 0.3s ease-in-out;
+     }
+.card a.position-relative:hover .recommended-product-img {
+         transform: scale(1.03); /* Slightly zoom on hover */
+     }

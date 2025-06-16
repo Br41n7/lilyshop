@@ -1,0 +1,67 @@
+{% extends "shop/base.html" %} 
+{% load i18n static %} 
+{% load widget_tweaks %} 
+
+{% block title %}{% translate "Place Your Order" %}{% endblock %} 
+
+{% block content %} 
+<div class="container my-4"> 
+    <h1 class="text-center mb-4">{% translate "Place Your Order" %}</h1> 
+    <div class="row justify-content-center"> 
+        <div class="col-md-8 col-lg-6"> 
+            <!-- Order summary Card --> 
+            <div class="card order-info mb-4 shadow-sm"> 
+                <div class="card-body"> 
+                    <h2 class="card-title mb-3">{% translate "Order Summary" %}</h2> 
+                    <ul class="list-unstyled"> 
+                        {% for item in cart %} 
+                            <li class="d-flex justify-content-between mb-2 pb-1 border-bottom"> 
+                                <div>{{ item.quantity }}x {{ item.product.name }}</div> 
+                                <span>${{ item.total_price|floatformat:2 }}</span> 
+                            </li> 
+                        {% endfor %} 
+                        {% if cart.coupon %} 
+                            <li class="d-flex justify-content-between mb-2 text-success"> 
+                                <div> 
+                                    {% blocktranslate with code=cart.coupon.code discount=cart.coupon.discount %} 
+                                        "{{ code }}" ({{ discount }}% off) 
+                                    {% endblocktranslate %} 
+                                </div> 
+                                <span class="text-danger">- ${{ cart.get_discount|floatformat:2 }}</span> 
+                            </li> 
+                        {% endif %} 
+                        <li class="d-flex justify-content-between pt-2 mt-2 border-top fw-bold"> 
+                            <div>{% translate "Total" %}:</div> 
+                            <span>${{ cart.get_total_price_after_discount|floatformat:2 }}</span> 
+                        </li> 
+                    </ul> 
+                </div> 
+            </div> 
+
+            <!-- Checkout form Card --> 
+            <div class="card order-form shadow-sm"> 
+                <div class="card-body"> 
+                    <h2 class="card-title mb-3">{% translate "Shipping Information" %}</h2> 
+                    <form method="post" class="needs-validation" novalidate> 
+                        {% csrf_token %} 
+                        {% for field in form %} 
+                            <div class="mb-3"> 
+                                <label class="form-label" for = "{{field.id_for_label }}">{{field.label}}</label>
+                                {{ field|add_class:"form-control" }} 
+                                {% if field.help_text %} 
+                                    <div class="form-text">{{ field.help_text|safe }}</div> 
+                                {% endif %} 
+                                {% for error in field.errors %} 
+                                    <div class="invalid-feedback d-block">{{ error }}</div> 
+                                {% endfor %} 
+                            </div> 
+                        {% endfor %} 
+                        <button type="submit" class="btn btn-primary w-100 mt-3">{% translate "Place Order" %}</button> 
+                    </form> 
+                </div> 
+            </div> 
+        </div> 
+    </div> 
+</div> 
+{% endblock %} 
+
