@@ -1,115 +1,254 @@
-{% load i18n static %}
+{% load static i18n %}
 <!DOCTYPE html>
 <html lang="{{ request.LANGUAGE_CODE }}">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}{{ site_settings.brand|default:"My Awesome Shop" }}{% endblock title %}</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{% block title %}{{ site_settings.brand|default:"My Shop" }}{% endblock %}</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="{% static 'css/custom.css' %}" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  {% block extra_head %}{% endblock %}
+  <style>
+    /* Navbar link dividers */
+    .navbar-nav .nav-item:not(:last-child) {
+      border-right: 1px solid rgba(255,255,255,0.15);
+      margin-right: 1.25rem;
+      padding-right: 1.25rem;
+      transition: border-color 0.3s ease;
+    }
+    .navbar-nav .nav-item:hover:not(:last-child) {
+      border-color: rgba(255,255,255,0.35);
+    }
+    /* Remove border on last nav-item */
+    .navbar-nav .nav-item:last-child {
+      margin-right: 0;
+      padding-right: 0;
+    }
+
+    /* Nav links: smooth hover color change */
+.navbar-nav .nav-link {
+      transition: color 0.3s ease;
+      padding: 0.5rem 0;
+      font-weight: 500;
+    }
+    .navbar-nav .nav-link:hover,
+    .navbar-nav .nav-link:focus,
+    .navbar-nav .nav-link.active {
+      color: #0d6efd; /* Bootstrap primary blue */
+    }
+
+    /* WhatsApp floating button */
+    #whatsapp-contact {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #25D366;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+      z-index: 1050;
+      transition: background 0.3s ease, transform 0.2s ease;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    #whatsapp-contact:hover {
+      background: #1ebe5d;
+      transform: scale(1.1);
+      text-decoration: none;
+    }
+    #whatsapp-contact i {
+      color: white;
+      font-size: 30px;
+      user-select: none;
+    }
+
+    /* Cart badge improvements */
+    .navbar-nav .nav-link .badge {
+      font-size: 0.65rem;
+      padding: 0.25em 0.4em;
+      top: 6px;
+      right: 6px;
+    }
+
+    /* Responsive padding on navbar */
+    @media (max-width: 575.98px) {
+      .navbar-nav .nav-item:not(:last-child) {
+        border-right: none;
+margin-right: 0;
+        padding-right: 0;
+        border-bottom: 1px solid rgba(255,255,255,0.15);
+        padding-bottom: 0.5rem;
+        margin-bottom: 0.5rem;
+      }
+    }
+  </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="{% url "shop:home" %}">{{ site_settings.brand|default:"My Awesome Shop" }}</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="{% url "shop:home" %}">{% trans "Home" %}</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">{% trans "Contact" %}</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'cart:cart_detail' %}">
-                            <i class="fas fa-shopping-cart"></i>
-                            {% with total_items=cart|length %}
-                                {% if total_items > 0 %}
-                                    <span class="cart-count">({{ total_items }})</span>
-                                {% endif %}
-                            {% endwith %}
-                        </a>
-                    </li>
-                    {% get_available_languages as LANGUAGES %}
-                    {% get_language_info_list for LANGUAGES as languages %}
-                    {% if languages|length > 1 %}
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="languageDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                {% get_language_info for request.LANGUAGE_CODE as lang %}
-                                {{ lang.name_local }}
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="languageDropdown">
-                                {% for language in languages %}
-                                    {% if language.code != request.LANGUAGE_CODE %}
-                                        <li>
-                                            <a class="dropdown-item" href="/{{ language.code }}{{ request.get_full_path|slice:'3:' }}">
-                                                {{ language.name_local }} ({{ language.code }})
-                                            </a>
-                                        </li>
-                                    {% endif %}
-                                {% endfor %}
-                            </ul>
-                        </li>
-                    {% endif %}
-                                    </ul>
-            </div>
-        </div>
-    </nav>
-        {% if messages %}
-            {% for message in message_tags %}
-                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-                    {{ message }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            {% endfor %}
-        {% endif %}
-        {% block content %}{% endblock %}
-    <footer class="bg-dark footer mt-auto py-4 text-white">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-4 mb-3">
-                    <h5 class="text-light">{% trans "About Us" %}</h5>
-                    <p class="text-light">{{ site_settings.about_us|default:"Add your 'About Us' text here via the admin panel." }}</p>
-                </div>
-                <div class="col-md-4 mb-3">
-                    <h5 class="text-light">{% trans "Contact Us" %}</h5>
-                    <ul class="list-unstyled">
-                        {% if site_settings.phone %}
-                            <li>
-                                <a href="tel:{{ site_settings.phone }}" class="text-light text-decoration-none">
-                                    <i class="fas fa-phone-alt me-2"></i>{{ site_settings.phone }}
-                                </a>
-                            </li>
-                        {% endif %}
-                        {% if site_settings.email %}
-                            <li>
-                                <a href="mailto:{{ site_settings.email }}" class="text-light text-decoration-none">
-                                    <i class="fas fa-envelope me-2"></i>{{ site_settings.email }}
-                                </a>
-                            </li>
-                        {% endif %}
-                    </ul>
-                </div>
-                <div class="col-md-4 mb-3">
-                    <h5 class="text-light">{% trans "Quick Links" %}</h5>
-                    <ul class="list-unstyled">
-                        <li><a href="{% url "shop:home" %}" class="text-light text-decoration-none">{% trans "Home" %}</a></li>
-                        <li><a href="#" class="text-light text-decoration-none">{% trans "Privacy Policy" %}</a></li>
-                        <li><a href="#" class="text-light text-decoration-none">{% trans "Terms of Service" %}</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="row mt-3">
-                <div class="col text-center text-light">
-                    <p class="mb-0">&copy; {% now "Y" %} {{ site_settings.brand|default:"My Awesome Shop" }}. {% trans "All rights reserved." %}</p>
-                </div>
-            </div>
-        </div>
-    </footer>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+  <nav id="mainNavbar" class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top shadow-sm">
+    <div class="container">
+      <a class="navbar-brand fs-4 fw-bold" href="{% url 'shop:home' %}">
+        {{ site_settings.brand|default:"My Shop" }}
+      </a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#navbarContent"
+        aria-controls="navbarContent"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarContent">
+        <ul class="navbar-nav ms-auto align-items-center">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="{% url 'shop:home' %}">{% trans "Home" %}</a>
+          </li>
+          <li class="nav-item">
+                            <a class="nav-link" href="#"> {% comment %} {% url 'shop:contact' %}">{% trans "Contact" %} {% endcomment %}</a>
+          </li>
+          <li class="nav-item position-relative">
+<a class="nav-link" href="{% url 'cart:cart_detail' %}">
+              <i class="fas fa-shopping-cart"></i>
+              {% with total_items=cart|length %}
+              {% if total_items > 0 %}
+                <span class="badge bg-danger rounded-pill position-absolute top-0 start-100 translate-middle">
+                  {{ total_items }}
+                </span>
+              {% endif %}
+              {% endwith %}
+            </a>
+          </li>
+          {% get_available_languages as LANGUAGES %}
+          {% get_language_info_list for LANGUAGES as languages %}
+          {% if languages|length > 1 %}
+          <li class="nav-item dropdown">
+            <a
+              class="nav-link dropdown-toggle"
+              href="#"
+              id="languageDropdown"
+              role="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              {% get_language_info for request.LANGUAGE_CODE as lang %}
+              {{ lang.name_local }}
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="languageDropdown">
+              {% for language in languages %}
+                {% if language.code != request.LANGUAGE_CODE %}
+                  <li>
+<a class="dropdown-item" href="/{{ language.code }}{{ request.get_full_path|slice:'3:' }}">
+                      {{ language.name_local }} ({{ language.code }})
+                    </a>
+                  </li>
+                {% endif %}
+              {% endfor %}
+            </ul>
+          </li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  {% if messages %}
+  <div class="container mt-3">
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {% block content %}{% endblock %}
+<footer class="bg-dark text-light pt-4 mt-5">
+  <div class="container">
+    <div class="row text-center text-md-start">
+      <div class="col-md-4 mb-3">
+        <h5 class="fw-bold">About Us</h5>
+        <p class="small">
+          {{ site_settings.brand|default:"My Shop" }} is your go-to place for quality products and excellent service.
+        </p>
+      </div>
+      <div class="col-md-4 mb-3">
+        <h5 class="fw-bold">Quick Links</h5>
+        <ul class="list-unstyled">
+          <li><a href="{% url 'shop:home' %}" class="text-decoration-none text-light">Home</a></li>
+{% comment %}          <li><a href="{% url 'shop:contact' %}" class="text-decoration-none text-light">Contact</a></li>  {% endcomment %}
+          <li><a href="{% url 'cart:cart_detail' %}" class="text-decoration-none text-light">Cart</a></li>
+        </ul>
+      </div>
+      <div class="col-md-4 mb-3">
+        <h5 class="fw-bold">Contact</h5>
+        <p class="small mb-1"><i class="fas fa-phone me-2"></i>{{ site_settings.phone|default:"(123) 456-7890" }}</p>
+        <p class="small mb-1">
+          <i class="fas fa-envelope me-2"></i>
+                            <a href="mailto:{{ site_settings.email|default:'info@example.com' }}" class="text-decoration-none text-light">
+            {{ site_settings.email|default:"info@example.com" }}
+          </a>
+        </p>
+        <p class="small mb-0">
+          <i class="fab fa-whatsapp me-2"></i>
+          <a href="https://wa.me/{{ site_settings.whatsapp_number|default:'2349118263860' }}" target="_blank" class="text-decoration-none text-light">
+            WhatsApp Us
+          </a>
+        </p>
+      </div>
+    </div>
+
+    <hr class="border-secondary" />
+
+    <div class="text-center pb-3 small">
+      &copy; {{ now|date:"Y" }} {{ site_settings.brand|default:"My Shop" }}. All rights reserved.
+    </div>
+  </div>
+</footer>
+  <!-- WhatsApp Contact Button -->
+  <a
+    id="whatsapp-contact"
+    href="https://wa.me/{{ site_settings.whatsapp_number|default:'2349118263860' }}"
+    target="_blank"
+    rel="noopener"
+    aria-label="Contact us on WhatsApp"
+  >
+    <i class="fab fa-whatsapp"></i>
+  </a>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Auto close navbar on link click (for mobile)
+    document.querySelectorAll('.navbar-nav .nav-link').forEach(link => {
+link.addEventListener('click', () => {
+        const navbarCollapse = document.getElementById('navbarContent');
+        if (navbarCollapse.classList.contains('show')) {
+          new bootstrap.Collapse(navbarCollapse).toggle();
+        }
+      });
+    });
+
+    // Auto close navbar on scroll down
+    let lastScrollTop = 0;
+    window.addEventListener('scroll', () => {
+      const st = window.pageYOffset || document.documentElement.scrollTop;
+      if (st > lastScrollTop) {
+        // Scrolling down
+        const navbarCollapse = document.getElementById('navbarContent');
+        if (navbarCollapse.classList.contains('show')) {
+          new bootstrap.Collapse(navbarCollapse).hide();
+        }
+      }
+      lastScrollTop = st <= 0 ? 0 : st;
+    }, false);
+  </script>
 </body>
 </html>
