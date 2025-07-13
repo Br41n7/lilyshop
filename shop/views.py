@@ -3,10 +3,9 @@ from django.shortcuts import get_object_or_404, render
 from cart.forms import CartAddProductForm
 from .models import Category, Product
 # from .recommender import Recommender
-from site_settings.models import * 
+from site_settings.models import *
 from django.http import HttpRequest, HttpResponse
 from typing import Optional, Dict, Any, List
-
 
 
 def product_list(request: HttpRequest, category_slug: Optional[str] = None) -> HttpResponse:
@@ -43,7 +42,7 @@ def product_list(request: HttpRequest, category_slug: Optional[str] = None) -> H
     # Prepare the context dictionary for the template
     context: Dict[str, Any] = {
         'category': category,
-        'categories': categories, # <-- UNCOMMENTED THIS LINE
+        'categories': categories,  # <-- UNCOMMENTED THIS LINE
         'products': products,
     }
 
@@ -92,19 +91,18 @@ def product_detail(request: HttpRequest, id: int, slug: str) -> HttpResponse:
 
     return render(
         request,
-        'shop/product/detail.html', # Assuming this is the correct template path
+        'shop/product/detail.html',  # Assuming this is the correct template path
         context
     )
 
 
-
 def home(request):
-    products=Product.objects.all()
-    hot_products=Product.objects.filter(is_hot=True)
+    products = Product.objects.all()
+    hot_products = Product.objects.filter(is_hot=True)
     return render(request, 'shop/home.html',
                   {
-                      'products':products,
-                      'hot_products':hot_products,
+                      'products': products,
+                      'hot_products': hot_products,
 
                   })
 
@@ -152,8 +150,145 @@ def home(request):
 #             'recommended_products': recommended_products,
 #         },
 #     )
-
-
-
-
-    
+#         },
+#     )
+#         },
+#     )
+#         },
+#     )
+#         },
+#     )
+#         },
+#     )
+#         },
+#     )
+#         },
+#     )
+#         },
+#     )
+#         },
+#     )
+#         },
+#     )
+#         },
+#     )
+#         },
+#     )
+#         },
+#     )
+#         },
+#     )
+#         },
+#     )
+#         },
+#     )
+#         },
+#     )
+#         },
+#     )
+#         },
+#     )
+#         },
+#     )
+#         },
+#     )
+#         },
+#     )
+#         },
+#     )
+#         },
+#     )
+#         },
+#     )
+#         },
+#     )
+#         },
+#     )
+#         },
+#     )
+#         },
+#     )
+#         },
+#     )
+#         },
+#     )
+#         },
+#     )
+#         },
+#     )
+#         },
+#     )
+#         },
+#     )
+#         },
+#     )
+#         },
+#     )
+#         },
+#     )
+#         },
+#     )
+#         },
+#     )
+#         },
+#     )
+#         },
+#     )
+#         },
+#     )
+#         },
+#     )
+#         },
+#     )
+#         },
+#     )
+#         },
+#     )
+#         },
+#     )
+#         },
+#     )
+#         },
+#     )
+#         },
+#     )
+#         },
+#     )
+#         },
+#     )
+#         },
+#     )
+#         },
+#     )
+#         },
+#     )
+#         },
+#     )
+#         },
+#     )
+#         },
+#     )
+#         },
+#     )
+#         },
+#     )
+#         },
+#     )
+#         },
+#     )
+#         },
+#     )
+#         },
+#     )
+#         },
+#     )
+#         },
+#     )
+#         },
+#     )
+#         },
+#     )
+#         },
+#     )
+#         },
+#     )
